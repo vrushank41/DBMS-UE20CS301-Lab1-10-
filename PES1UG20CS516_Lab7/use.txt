@@ -1,0 +1,20 @@
+select u.user_id,u.user_type,u.firstname,u.lastname from train_user as u,ticket as t where u.user_id = t.passenger_id and t.departure='Bengaluru' and t.arrival='Chennai' and t.travel_date<'2021-11-1' UNION select u.user_id,u.user_type,u.firstname,u.lastname from train_user as u,ticket as t where u.user_id = t.passenger_id and t.departure='Bengaluru' and t.arrival='Chennai' and t.travel_date>'2022-07-1';
+
+
+
+select u.user_id,u.user_type,u.firstname,u.lastname from train_user as u,ticket as t where u.user_id = t.passenger_id and t.departure='Bengaluru' and t.arrival='Chennai' and year(t.travel_date)=2021 and month(t.travel_date)=10 AND EXISTS (select u.user_id,u.user_type,u.firstname,u.lastname from train_user as u,ticket as t where u.user_id = t.passenger_id and t.departure='Bengaluru' and t.arrival='Chennai' and month(t.travel_date)=8 and year(t.travel_date)=2022);
+
+
+select u.user_id,u.user_type,u.firstname,u.lastname from train_user as u,ticket as t where u.user_id = t.passenger_id and t.departure='Bengaluru' and t.arrival='Chennai' and  month(t.travel_date)=8 and year(t.travel_date)=2022 AND NOT EXISTS (select u.user_id,u.user_type,u.firstname,u.lastname from train_user as u,ticket as t where u.user_id = t.passenger_id and t.departure='Bengaluru' and t.arrival='Chennai' and year(t.travel_date)=2021 and month(t.travel_date)=10);
+
+
+select u.User_id, u.User_type,u.firstname, u.lastname  from ticket as t, train_user as u  
+where t.passenger_id = u.User_ID and t.Departure = 'Bengaluru' and t.Arrival = 'Chennai' 
+and exists(select pnr from ticket as ti where t.passenger_id = ti.passenger_id and ti.Departure = 'Chennai' and ti.Arrival = 'Bengaluru' 
+and (DATEDIFF(ti.Travel_Date,t.Travel_Date) BETWEEN 0 and 7));
+
+
+
+select u.user_id,u.user_type,u.firstname,u.lastname  from ticket as t1, train_user as u  
+where t1.passenger_id = u.user_id and t1.departure = 'Bengaluru' and t1.Arrival = 'Chennai' 
+and not exists(select pnr from ticket as t2 where t1.passenger_id = t2.passenger_id and t2.Departure = 'Chennai' and t2.Arrival = 'Bengaluru');
